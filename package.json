@@ -1,0 +1,22 @@
+{
+  "name": "dbms-lab-cusat",
+  "version": "1.0.0",
+  "description": "All the Programs under the course <strong>[ {Course_Code} ] { Course_Name }</strong> Lab in Integrated M.Sc in Computer Science ( Artificial Intelligence and Data Science ) from Cochin University of Science and Technology",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abdulhakkeempa/dbms-lab-cusat.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/abdulhakkeempa/dbms-lab-cusat/issues"
+  },
+  "homepage": "https://github.com/abdulhakkeempa/dbms-lab-cusat#readme",
+  "dependencies": {
+    "graphql": "^16.6.0"
+  }
+}
