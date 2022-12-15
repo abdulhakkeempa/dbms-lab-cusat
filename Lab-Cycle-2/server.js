@@ -17,6 +17,5 @@ graphql({
   source: '{ hello }',
   rootValue
 }).then((response) => {
-  var a = JSON.parse(JSON.stringify(response));
-  console.log(a.data.hello);
-});
+  console.log(response.data.hello);
+})
