@@ -1,4 +1,33 @@
-myCollection
+# 1.Create Database
+use emp
+
+#2. Create a collection
+db.lab.insertOne( {x:1} );
+
+#3. Drop Collection
+db.lab.drop()
+
+#4. Insert Document in Selected Collection
+db.myCollection.insertOne( { x: 1 } );
+
+#5. Select the list document in Collection
+db.myCollection.find();
+
+#6. Update in Collection
+db.myCollection.updateOne({x:1},{$set:{x:2}})
+
+#7. function deprecated
+
+#8. Delete in collection
+db.myCollection.deleteOne( { x: 2 } )
+
+#9. Projection Using Find
+db.myCollection.find();
+
+#10. Drop Database
+db.dropDatabase();
+
+
 emp> db.lab.drop()
 true
 emp> db.myCollection.insertOne( { x: 1 } );
