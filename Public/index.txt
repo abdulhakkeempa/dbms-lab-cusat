@@ -1,0 +1,127 @@
+Lab Cycle - 1
+#question-1
+USE LAB;
+
+create table employees(
+	ssn int auto_increment,
+    fname char(100) NOT NULL,
+    lname char(100),
+    address varchar(200),
+    sex char(50),
+    salary varchar(100),
+    SuperSSN int,
+    DNo int references department(DNo),
+    PRIMARY KEY (ssn)
+);
+
+create table department(
+	DNo int auto_increment primary key,
+    DName varchar(100),
+    MgrSSN int,
+    MgrStartDate date,
+	FOREIGN KEY (MgrSSN) REFERENCES employees(ssn)
+);
+
+create table DLocation(
+    DLoc int auto_increment primary key,
+	DNo int,
+    foreign key (DNo) references department(DNo)
+);
+
+create table project(
+	PNo int auto_increment primary key,
+    PName varchar(100),
+    PLocation varchar(100),
+    DNo int,
+    foreign key (DNo) references department(DNo)
+);
+
+create table works_on(
+	SSN int,
+    foreign key (SSN) references employees(ssn),
+    PNo int, 
+    foreign key (PNo) references project(PNo),
+    hours int CHECK (hours>=5)
+);
+
+ALTER TABLE employees
+ADD COLUMN Age Int;
+
+DROP TABLE project; 
+
+TRUNCATE TABLE works_on;
+
+DESC department; 
+
+
+#question-2
+INSERT INTO employees (fname, lname, address, sex, salary, SuperSSN,Age)
+VALUES ('Abdul Hakkeam', 'P A', 'CUSAT', 'Male', 30000, 10,20);
+
+select * from employees;
+
+UPDATE employees
+SET salary = 25000
+WHERE ssn = 9;
+
+DELETE FROM employees where ssn=2;
+
+
+#question-3
+CREATE USER 'user1'@'localhost' IDENTIFIED BY 'password';
+
+GRANT SELECT ON employees TO'user1'@'localhost';
+
+REVOKE SELECT ON employees FROM 'user1'@'localhost';
+
+
+#question-4
+select fname from employees where fname like "%a_";
+
+SELECT sex, COUNT(ssn) AS count
+FROM employees
+GROUP BY sex;
+
+SELECT AVG(salary) AS AverageSalary FROM employees where sex="Female";
+
+SELECT SUM(salary) AS TotalSalary FROM employees where sex="Male";
+
+SELECT MAX(salary),MIN(salary) FROM employees where sex="Male";
+
+SELECT * FROM employees where salary IN (25000,50000);
+
+SELECT lname FROM employees where salary=30000 or salary=40000 or salary=50000;
+
+
+#question-5
+use lab;
+
+UPDATE employees SET salary = salary+ 0.25*salary WHERE DNo IN (SELECT DNo FROM project WHERE PLocation = "Chennai");  
+
+select fname,Dloc,hours from employees,dlocation,works_on where dlocation.DNo = employees.DNo and works_on.SSN = employees.ssn and hours > 5;
+
+SELECT project.PName,project.PLocation FROM project LEFT JOIN works_on ON works_on.hours IS NOT NULL;
+
+SELECT works_on.hours FROM works_on RIGHT JOIN project ON project.PLocation IS NOT NULL;
+
+select works_on.PNo,employees.fname,dlocation.Dloc,employees.DNo,employees.ssn,works_on.hours from employees,works_on,dlocation
+where works_on.SSN = employees.ssn and
+    dlocation.DNo = employees.DNo ;
+
+
+
+
+#cycle-2
+
+#question-1
+CREATE VIEW VW_emp AS
+SELECT * FROM employees;
+
+CREATE VIEW VW_SSN AS
+SELECT SuperSSN,Dno FROM employees WHERE sex="Female";
+
+UPDATE VW_emp SET address="Chennai"
+WHERE ssn=10;
+SELECT * FROM VW_emp;
+
+DROP VIEW VW_emp;
