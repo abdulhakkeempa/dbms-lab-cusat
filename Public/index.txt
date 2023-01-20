@@ -125,3 +125,176 @@ WHERE ssn=10;
 SELECT * FROM VW_emp;
 
 DROP VIEW VW_emp;
+
+
+#question-2
+
+SQL> set serveroutput on
+SQL> edit@factorial.sql
+create or replace function get_factorial(N int)
+return varchar
+is
+fact int := 1;
+begin
+for i in 1..N loop
+fact := fact*i;
+end loop;
+return ’Factorial is ’ || fact ;
+end;
+/
+select get_factorial(5) from dual;
+SQL> @XEfactorial.sql
+
+
+SQL> set serveroutput on
+SQL> edit@max.sql
+create or replace function maximum(n1 int, n2 int)
+return varchar
+is
+m int := 0;
+begin
+if n1>n2 then
+m := n1;
+else
+m := n2;
+end if;
+return ’Maximum is ’ ||m;
+end;
+/
+select maximum(4,9) from dual;
+SQL> @XEmax.sql
+
+
+SQL> set serveroutput on
+SQL> edit@Prime.sql
+declare
+n number := &n;
+i number := 1;
+flag number := 0;
+begin
+while i < n/2
+loop
+i := i+1;
+if (mod(n,i)= 0) then
+flag := 1;
+end if;
+end loop;
+if (flag = 1) then
+dbms_output.put_line(’Not Prime’);
+else
+dbms_output.put_line(’Prime’);
+end if;
+end;
+/
+SQL> @XEprime.sql
+
+
+
+SQL> set serveroutput on
+SQL> edit@numbers.sql
+DECLARE
+i INTEGER := 1;
+BEGIN
+WHILE i <= 10 LOOP
+DBMS_OUTPUT.PUT_LINE(i);
+i := i+1;
+END LOOP;
+END;
+/
+SQL> @XEnumbers.sql
+
+
+#question-3
+
+SQL> declare cursor employee_cur is
+2 select SSN,Salary from Employee where DNO = ’D001’
+3 for update;
+4 incr_sal number;
+5 begin
+6 for employee_rec in employee_cur loop
+7 if employee_rec.Salary < 50000 then
+8 incr_sal := .15;
+9 else
+10 incr_sal := .10;
+11 end if;
+12 update Employee set Salary = Salary + Salary * incr_sal where current of
+employee_cur;
+13 end loop;
+14 end;
+15 /
+PL/SQL procedure successfully completed.
+
+
+SQL> declare cursor department_cur is
+2 select DNO,Dname from Department;
+3 data1 Department.DNO%type;
+4 data2 Department.Dname%type;
+5 begin
+6 open department_cur;
+7 loop
+8 fetch department_cur into data1,data2;
+9 exit when department_cur%notfound;
+10 dbms_output.put_line(’DNO : ’||data1||’::Dname : ’||data2);
+11 end loop;
+12 close department_cur;
+13 end;
+14 /
+
+
+
+#question-3
+CREATE OR REPLACE TRIGGER display_sal_changes
+BEFORE DELETE OR INSERT OR UPDATE ON employee
+FOR EACH ROW WHEN (NEW.ID > 0)
+DECLARE
+sal_diff number;
+BEGIN
+sal_diff := :NEW.salary - :old.salary;
+dbms_output.put line( ’Old salary: ’|| :OLD.salary);
+dbms_output.put_line( ’New salary: ’|| :NEW. salary);
+dbms_output.put_line(’Salary difference: ’|| sal_diff);
+END;
+/
+update employeee set salary = 50000 where ssn = ’e1001’;
+
+
+CREATE OR REPLACE TRIGGER display_hour_updates
+BEFORE DELETE OR INSERT OR UPDATE ON works_on
+FOR EACH ROW
+WHEN (NEW.HOURS > 0)
+DECLARE
+hour_diff number;
+BEGIN
+hour_diff := :NEW.HOURS - :OLD.HOURS;
+dbms_output.put_line(’Old HOURS: ’ || :OLD.HOURS);
+dbms_output.put_line(’New HOURS: ’ || :NEW.HOURS);
+dbms_output.put_line(’HOUR difference: ’ || hour_diff);
+END;
+/
+update works_on set hours = 20 where ssn = ’e1001’;
+
+
+
+#question-4
+
+mysql> start transaction;
+Query OK, 0 rows affected (0.01 sec)
+mysql> savepoint save1;
+Query OK, 0 rows affected (0.00 sec)
+mysql> insert into Employee values("e1006","Anju","Rajesh","Sobha Marina,Kochi","Female",
+80000,"SP1004","D005",29);
+Query OK, 1 row affected (0.01 sec)
+mysql> savepoint save2;
+Query OK, 0 rows affected (0.00 sec)
+
+
+mysql> rollback to save1;
+Query OK, 0 rows affected (0.01 sec)
+
+
+
+mysql> commit;
+Query OK, 0 rows affected (0.00 sec)
+
+
+
